@@ -156,4 +156,6 @@ source "drivers/sensors/Kconfig"
 
 source "drivers/cpuquiet/Kconfig"
 
+source "drivers/backoff/Kconfig"
+
 endmenu

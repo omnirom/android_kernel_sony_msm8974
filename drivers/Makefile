@@ -148,3 +148,5 @@ obj-$(CONFIG_SENSORS)		+= sensors/
 
 # cpuquiet
 obj-$(CONFIG_CPUQUIET_FRAMEWORK)		+= cpuquiet/
+
+obj-$(CONFIG_SUSPEND_BACKOFF)		+= backoff/

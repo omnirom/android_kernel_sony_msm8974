@@ -243,6 +243,7 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
 {
 	int nr_scanned = 0, total_isolated = 0;
 	struct page *cursor, *valid_page = NULL;
+	unsigned long nr_strict_required = end_pfn - blockpfn;
 	unsigned long flags;
 	bool locked = false;
 
@@ -258,7 +259,7 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
 			if (strict)
 				break;
 			else
-				goto isolate_fail;
+				continue;
 		}
 
 		if (!valid_page)
@@ -267,7 +268,7 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
 			if (strict)
 				break;
 			else
-				goto isolate_fail;
+				continue;
 		}
 
 		/*
@@ -292,11 +293,13 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
 			if (strict)
 				break;
 			else
-				goto isolate_fail;
+				continue;
 		}
 
 		/* Found a free page, break it into order-0 pages */
 		isolated = split_free_page(page);
+		if (!isolated && strict)
+			break;
 		total_isolated += isolated;
 		for (i = 0; i < isolated; i++) {
 			list_add(&page->lru, freelist);
@@ -307,13 +310,7 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
 		if (isolated) {
 			blockpfn += isolated - 1;
 			cursor += isolated - 1;
-			continue;
 		}
-
-isolate_fail:
-		if (strict)
-			break;
-
 	}
 
 	trace_mm_compaction_isolate_freepages(nr_scanned, total_isolated);
@@ -323,7 +320,7 @@ isolate_fail:
 	 * pages requested were isolated. If there were any failures, 0 is
 	 * returned and CMA will fail.
 	 */
-	if (strict && blockpfn < end_pfn)
+	if (strict && nr_strict_required > total_isolated)
 		total_isolated = 0;
 
 	if (locked)
@@ -607,7 +604,8 @@ isolate_migratepages_range(struct zone *zone, struct compact_control *cc,
 		continue;
 
 next_pageblock:
-		low_pfn = ALIGN(low_pfn + 1, pageblock_nr_pages) - 1;
+		low_pfn += pageblock_nr_pages;
+		low_pfn = ALIGN(low_pfn, pageblock_nr_pages) - 1;
 		last_pageblock_nr = pageblock_nr;
 	}
 
@@ -790,7 +788,7 @@ static isolate_migrate_t isolate_migratepages(struct zone *zone,
 	low_pfn = max(cc->migrate_pfn, zone->zone_start_pfn);
 
 	/* Only scan within a pageblock boundary */
-	end_pfn = ALIGN(low_pfn + 1, pageblock_nr_pages);
+	end_pfn = ALIGN(low_pfn + pageblock_nr_pages, pageblock_nr_pages);
 
 	/* Do not cross the free scanner or scan within a memory hole */
 	if (end_pfn > cc->free_pfn || !pfn_valid(low_pfn)) {

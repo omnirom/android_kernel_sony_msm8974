@@ -6,6 +6,7 @@
 enum msm_ion_heap_types {
 	ION_HEAP_TYPE_MSM_START = ION_HEAP_TYPE_CUSTOM + 1,
 	ION_HEAP_TYPE_DMA = ION_HEAP_TYPE_MSM_START,
+	ION_HEAP_TYPE_CP,
 	ION_HEAP_TYPE_SECURE_DMA,
 	ION_HEAP_TYPE_REMOVED,
 	/*
@@ -65,6 +66,7 @@ enum cp_mem_usage {
 	UNKNOWN = 0x7FFFFFFF,
 };
 
+#define ION_HEAP_CP_MASK		(1 << ION_HEAP_TYPE_CP)
 #define ION_HEAP_TYPE_DMA_MASK         (1 << ION_HEAP_TYPE_DMA)
 
 /**
@@ -119,12 +121,6 @@ enum cp_mem_usage {
 
 #ifdef __KERNEL__
 
-enum ion_permission_type {
-	IPT_TYPE_MM_CARVEOUT = 0,
-	IPT_TYPE_MFC_SHAREDMEM = 1,
-	IPT_TYPE_MDP_WRITEBACK = 2,
-};
-
 /*
  * This flag allows clients when mapping into the IOMMU to specify to
  * defer un-mapping from the IOMMU until the buffer memory is freed.
@@ -156,6 +152,7 @@ enum ion_permission_type {
  * @release_region:	function to be called when the number of allocations
  *			goes from 1 -> 0
  * @setup_region:	function to be called upon ion registration
+ * @memory_type:Memory type used for the heap
  * @allow_nonsecure_alloc: allow non-secure allocations from this heap. For
  *			secure heaps, this flag must be set so allow non-secure
  *			allocations. For non-secure heaps, this flag is ignored.
@@ -173,6 +170,7 @@ struct ion_cp_heap_pdata {
 	int (*request_region)(void *);
 	int (*release_region)(void *);
 	void *(*setup_region)(void);
+	enum ion_memory_types memory_type;
 	int allow_nonsecure_alloc;
 };
 
@@ -196,6 +194,7 @@ struct ion_co_heap_pdata {
 	int (*request_region)(void *);
 	int (*release_region)(void *);
 	void *(*setup_region)(void);
+	enum ion_memory_types memory_type;
 };
 
 /*

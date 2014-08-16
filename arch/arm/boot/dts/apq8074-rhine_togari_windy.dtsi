@@ -1068,3 +1068,6 @@
 			qcom,supply-post-off-sleep = <0>;
 	};
 };
+&mdss_edp {
+	status = "disable";
+};

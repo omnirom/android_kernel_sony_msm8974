@@ -358,29 +358,54 @@ static int mdss_dsi_link_clk_start(struct mdss_dsi_ctrl_pdata *ctrl_pdata)
 {
 	int rc = 0;
 
+
+pr_err("BLI: panel number: %i \n", ctrl_pdata->ndx);
+pr_err("BLI: bus_clk_cnt: %lu \n", (unsigned long)ctrl_pdata->bus_clk_cnt);
+pr_err("BLI: link_clk_cnt: %lu \n", (unsigned long)ctrl_pdata->link_clk_cnt);
+pr_err("BLI: pclk_rate: %lu \n", (unsigned long)ctrl_pdata->pclk_rate);
+pr_err("BLI: byte_clk_rate: %lu \n", (unsigned long)ctrl_pdata->byte_clk_rate);
+pr_err("BLI: panel mode: %i \n", ctrl_pdata->panel_mode);
+pr_err("BLI: mode_gpio: %i \n", ctrl_pdata->mode_gpio);
+pr_err("BLI: status_mode: %i \n", ctrl_pdata->status_mode);
+
 	rc = mdss_dsi_link_clk_set_rate(ctrl_pdata);
 	if (rc) {
 		pr_err("%s: failed to set clk rates. rc=%d\n",
 			__func__, rc);
 		goto error;
+	} else {
+
+		pr_err("%s: BLA: sucess set clk rate\n", __func__);
 	}
 
 	rc = clk_prepare_enable(ctrl_pdata->esc_clk);
 	if (rc) {
 		pr_err("%s: Failed to enable dsi esc clk\n", __func__);
 		goto esc_clk_err;
+	} else {
+
+		pr_err("%s: BLA: sucess enable dsi esc clk\n", __func__);
 	}
 
 	rc = clk_prepare_enable(ctrl_pdata->byte_clk);
+
+//	pr_err("%s:BLA: BLA:  source name: %s\n", __func__, ctrl_pdata->byte_clk.dbg_name);
+
 	if (rc) {
 		pr_err("%s: Failed to enable dsi byte clk\n", __func__);
 		goto byte_clk_err;
+	} else {
+
+		pr_err("%s: sucess enable dsi byte clk\n", __func__);
 	}
 
 	rc = clk_prepare_enable(ctrl_pdata->pixel_clk);
 	if (rc) {
 		pr_err("%s: Failed to enable dsi pixel clk\n", __func__);
 		goto pixel_clk_err;
+	} else {
+
+		pr_err("%s: sucess enable dsi pixel clk\n", __func__);
 	}
 
 	return rc;
@@ -448,6 +473,9 @@ static int mdss_dsi_clk_ctrl_sub(struct mdss_dsi_ctrl_pdata *ctrl,
 				pr_err("Failed to start bus clocks. rc=%d\n",
 					rc);
 				goto error;
+			} else {
+				
+				pr_err("BLA: start bus clocks sucess\n");
 			}
 		}
 		if (clk_type & DSI_LINK_CLKS) {
@@ -458,6 +486,9 @@ static int mdss_dsi_clk_ctrl_sub(struct mdss_dsi_ctrl_pdata *ctrl,
 				if (clk_type & DSI_BUS_CLKS)
 					mdss_dsi_bus_clk_stop(ctrl);
 				goto error;
+			} else {
+
+				pr_err("BLA: start link clocks sucess\n");
 			}
 		}
 	} else {
@@ -542,6 +573,8 @@ int mdss_dsi_clk_ctrl(struct mdss_dsi_ctrl_pdata *ctrl,
 				pr_err("Failed to start mctrl clocks. rc=%d\n",
 					rc);
 				goto error_mctrl_start;
+			} else {
+				pr_err("BLA: start mctrl clocks. sucess\n");
 			}
 		}
 
@@ -550,6 +583,9 @@ int mdss_dsi_clk_ctrl(struct mdss_dsi_ctrl_pdata *ctrl,
 			pr_err("Failed to %s ctrl clocks. rc=%d\n",
 				(enable ? "start" : "stop"), rc);
 			goto error_ctrl;
+		} else {
+
+				pr_err("BLA: success to %s ctrl clocks. rc=%d\n", (enable ? "start" : "stop"), rc);
 		}
 
 		if (!enable && m_changed) {
@@ -558,6 +594,9 @@ int mdss_dsi_clk_ctrl(struct mdss_dsi_ctrl_pdata *ctrl,
 				pr_err("Failed to stop mctrl clocks. rc=%d\n",
 					rc);
 				goto error_mctrl_stop;
+			} else {
+
+				pr_err("BLA: stop mctrl clocks sucess\n");
 			}
 		}
 	}

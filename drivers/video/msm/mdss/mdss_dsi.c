@@ -1508,9 +1508,11 @@ int dsi_panel_device_register(struct device_node *pan_node,
 	struct mdss_panel_info *pinfo = &(ctrl_pdata->panel_data.panel_info);
 	struct mdss_panel_specific_pdata *spec_pdata = NULL;
 
+ pr_err("%s: BLU: panel init!\n", __func__);
+
 	spec_pdata = ctrl_pdata->spec_pdata;
 	if (!spec_pdata) {
-		pr_err("%s: Invalid input data\n", __func__);
+		pr_err("%s: BLU: Invalid input data\n", __func__);
 		return -EINVAL;
 	}
 
@@ -1522,8 +1524,11 @@ int dsi_panel_device_register(struct device_node *pan_node,
 
 	rc = mdss_dsi_clk_div_config(pinfo, mipi->frame_rate);
 	if (rc) {
-		pr_err("%s: unable to initialize the clk dividers\n", __func__);
+		pr_err("%s: BLU: unable to initialize the clk dividers\n", __func__);
 		return rc;
+	} else {
+
+ 		pr_err("%s: BLU: clk divider init sucessfull\n", __func__);
 	}
 
 	dsi_ctrl_np = of_parse_phandle(pan_node,
@@ -1531,6 +1536,9 @@ int dsi_panel_device_register(struct device_node *pan_node,
 	if (!dsi_ctrl_np) {
 		pr_err("%s: Dsi controller node not initialized\n", __func__);
 		return -EPROBE_DEFER;
+	} else {
+
+ 		pr_err("%s: BLU: dsi controller  init sucessfull\n", __func__);
 	}
 
 	ctrl_pdev = of_find_device_by_node(dsi_ctrl_np);
@@ -1540,6 +1548,8 @@ int dsi_panel_device_register(struct device_node *pan_node,
 		pr_err("%s: failed to init regulator, rc=%d\n",
 						__func__, rc);
 		return rc;
+	} else {
+ 		pr_err("%s: BLU: regulator init sucessfull\n", __func__);
 	}
 
 	data = of_get_property(ctrl_pdev->dev.of_node,
@@ -1596,7 +1606,7 @@ int dsi_panel_device_register(struct device_node *pan_node,
 	ctrl_pdata->disp_en_gpio = of_get_named_gpio(ctrl_pdev->dev.of_node,
 		"qcom,platform-enable-gpio", 0);
 
-	if (!gpio_is_valid(ctrl_pdata->disp_en_gpio))
+	if (!gpio_is_valid(ctrl_pdata->disp_en_gpio)) 
 		pr_err("%s:%d, Disp_en gpio not specified\n",
 						__func__, __LINE__);
 
@@ -1611,6 +1621,9 @@ int dsi_panel_device_register(struct device_node *pan_node,
 
 	if (gpio_is_valid(ctrl_pdata->disp_te_gpio) &&
 					pinfo->type == MIPI_CMD_PANEL) {
+
+ 		pr_err("%s: BLU: init in CMD mode\n", __func__);
+
 		rc = gpio_request(ctrl_pdata->disp_te_gpio, "disp_te");
 		if (rc) {
 			pr_err("request TE gpio failed, rc=%d\n",
@@ -1650,6 +1663,8 @@ int dsi_panel_device_register(struct device_node *pan_node,
 
 	if (pinfo->mode_gpio_state != MODE_GPIO_NOT_VALID) {
 
+ 		pr_err("%s: BLU: GPIO mode is not invalid\n", __func__);
+
 		ctrl_pdata->mode_gpio = of_get_named_gpio(
 					ctrl_pdev->dev.of_node,
 					"qcom,platform-mode-gpio", 0);
@@ -1663,6 +1678,8 @@ int dsi_panel_device_register(struct device_node *pan_node,
 	if (mdss_dsi_clk_init(ctrl_pdev, ctrl_pdata)) {
 		pr_err("%s: unable to initialize Dsi ctrl clks\n", __func__);
 		return -EPERM;
+	} else {
+ 		pr_err("%s: BLU: dsi controller init sucessfull\n", __func__);
 	}
 
 	if (mdss_dsi_retrieve_ctrl_resources(ctrl_pdev,
@@ -1670,6 +1687,8 @@ int dsi_panel_device_register(struct device_node *pan_node,
 					     ctrl_pdata)) {
 		pr_err("%s: unable to get Dsi controller res\n", __func__);
 		return -EPERM;
+	} else {
+ 		pr_err("%s: BLU: dsi controller res init sucessfull\n", __func__);
 	}
 
 	ctrl_pdata->panel_data.intf_ready = mdss_dsi_intf_ready;
@@ -1719,6 +1738,8 @@ int dsi_panel_device_register(struct device_node *pan_node,
 		if (rc) {
 			pr_err("%s: Panel power on failed\n", __func__);
 			return rc;
+		} else {
+	 		pr_err("%s: BLU: panel power on sucess\n", __func__);
 		}
 
 		mdss_dsi_clk_ctrl(ctrl_pdata, DSI_ALL_CLKS, 1);
@@ -1732,6 +1753,8 @@ int dsi_panel_device_register(struct device_node *pan_node,
 	if (rc) {
 		pr_err("%s: unable to register MIPI DSI panel\n", __func__);
 		return rc;
+	} else {
+ 		pr_err("%s: BLU: registering of MIPI DSI panel sucessfull\n", __func__);
 	}
 
 	if (pinfo->pdest == DISPLAY_1) {
@@ -1744,7 +1767,7 @@ int dsi_panel_device_register(struct device_node *pan_node,
 		ctrl_pdata->ndx = 1;
 	}
 
-	pr_debug("%s: Panel data initialized\n", __func__);
+	pr_err("%s: Panel data initialized\n", __func__);
 	return 0;
 }
 

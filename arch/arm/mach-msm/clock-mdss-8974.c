@@ -1253,6 +1253,9 @@ static int dsi_pll_enable_seq_8974(void)
 
 	dsi_pll_software_reset();
 
+
+			pr_err("%s:BLA:  mdss_dsi_base=%i\n", __func__, mdss_dsi_base);
+
 	/*
 	 * PLL power up sequence.
 	 * Add necessary delays recommeded by hardware.
@@ -1282,11 +1285,13 @@ static int dsi_pll_enable_seq_8974(void)
 				status,
 				((status & 0x01) == 1),
 				max_reads, timeout_us)) {
-			pr_debug("%s: DSI PLL status=%x failed to Lock\n",
+			pr_err("%s:BLA:  DSI PLL status=%x failed to Lock\n",
 			       __func__, status);
-			pr_debug("%s:Trying to power UP PLL again\n",
+			pr_err("%s:BLA: Trying to power UP PLL again\n",
 			       __func__);
 		} else {
+			pr_err("%s:BLA:  DSI PLL Locked\n",
+			       __func__);
 			break;
 		}
 
@@ -1311,15 +1316,16 @@ static int dsi_pll_enable_seq_8974(void)
 	}
 
 	if ((status & 0x01) != 1) {
-		pr_debug("%s: DSI PLL status=%x failed to Lock\n",
+		pr_err("%s: BLA: DSI PLL status=%x failed to Lock\n",
 		       __func__, status);
 		rc = -EINVAL;
 		goto error;
 	}
 
-	pr_debug("%s: DSI PLL Lock success\n", __func__);
+	pr_err("%s: BLA: DSI PLL Lock success\n", __func__);
 
 error:
+	pr_err("%s: BLA: rc=%i\n", __func__,rc);
 	return rc;
 }
 
@@ -1329,8 +1335,10 @@ static int dsi_pll_enable(struct clk *c)
 	struct dsi_pll_vco_clk *vco = to_vco_clk(c);
 
 	if (!mdss_gdsc_enabled()) {
-		pr_err("%s: mdss GDSC is not enabled\n", __func__);
+		pr_err("%s: BLA: mdss GDSC is not enabled\n", __func__);
 		return -EPERM;
+	} else {
+		pr_err("%s: BLA: mdss GDSC enabled\n", __func__);
 	}
 
 	rc = clk_enable(mdss_ahb_clk);
@@ -1338,20 +1346,23 @@ static int dsi_pll_enable(struct clk *c)
 		pr_err("%s: failed to enable mdss ahb clock. rc=%d\n",
 			__func__, rc);
 		return rc;
+	} else {
+		pr_err("%s: BLA: mdss adb clock enabled succesfully\n", __func__);
 	}
 
 	/* Try all enable sequences until one succeeds */
 	for (i = 0; i < vco->pll_en_seq_cnt; i++) {
 		rc = vco->pll_enable_seqs[i]();
-		pr_debug("%s: DSI PLL %s after sequence #%d\n", __func__,
+		pr_err("%s: DSI PLL %s after sequence #%d\n", __func__,
 			rc ? "unlocked" : "locked", i + 1);
+		pr_err("%s: BLA: enable seq=%i, rc=%i.\n", __func__, i, rc);
 		if (!rc)
 			break;
 	}
 	clk_disable(mdss_ahb_clk);
 
 	if (rc)
-		pr_err("%s: DSI PLL failed to lock\n", __func__);
+		pr_err("%s: DSI PLL failed to lock rc=%i\n", __func__, i);
 
 	return rc;
 }

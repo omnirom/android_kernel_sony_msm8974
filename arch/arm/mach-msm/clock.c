@@ -484,14 +484,23 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
 	int rc = 0;
 	const char *name = clk ? clk->dbg_name : NULL;
 
-	if (IS_ERR_OR_NULL(clk))
-		return -EINVAL;
+pr_err("poiu: clk_set_rate\n"); 
 
-	if (!clk->ops->set_rate)
+	if (IS_ERR_OR_NULL(clk)) {
+
+		pr_err("poiu: EINVAL\n"); 
+		return -EINVAL;
+	}
+
+	if (!clk->ops->set_rate) {
+		pr_err("poiu: ENOSYS\n"); 
 		return -ENOSYS;
+	}
 
-	if (!is_rate_valid(clk, rate))
+	if (!is_rate_valid(clk, rate)) {
+		pr_err("poiu: EINVAL2\n"); 
 		return -EINVAL;
+	}
 
 	mutex_lock(&clk->prepare_lock);
 
@@ -529,6 +538,7 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
 
 out:
 	mutex_unlock(&clk->prepare_lock);
+	pr_err("poiu: out, rc=%i\n", rc); 
 	return rc;
 
 err_set_rate:

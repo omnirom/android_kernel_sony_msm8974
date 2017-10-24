@@ -1,8 +1,4 @@
-CONFIG_CMDLINE="androidboot.selinux=permissive msm_rtb.filter=0x3F ehci-hcd.park=3 dwc3.maximum_speed=high dwc3_msm.prop_chg_detect=Y coherent_pool=8M sched_enable_power_aware=1 user_debug=31 androidboot.hardware=qcom androidboot.selinux=permissive buildvariant=userdebug androidboot.emmc=true androidboot.bootloader=s1 oemandroidboot.s1boot=1286-7314_S1_Boot_MSM8974AC_LA3.0_M_2 androidboot.serialno=CB5A218U9A ta_info=1,16,256 startup=0x00000001 warmboot=0x00000000 oemandroidboot.imei=3551880692593500 oemandroidboot.phoneid=0000:3551880692593500 oemandroidboot.security=0 oemandroidboot.babe08b3=50000000 oemandroidboot.securityflags=0x00000003 lcdid_adc=0x94BF2 display_status=on androidboot.baseband=msm loglevel=7"
-# CONFIG_CMDLINE_FROM_BOOTLOADER is not set
-# CONFIG_CMDLINE_EXTEND is not set
 CONFIG_LOG_BUF_SHIFT=21
-CONFIG_CMDLINE_FORCE=y
 # CONFIG_ARM_PATCH_PHYS_VIRT is not set
 CONFIG_EXPERIMENTAL=y
 CONFIG_LOCALVERSION="-OmniROM"

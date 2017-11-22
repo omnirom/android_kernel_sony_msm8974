@@ -72,6 +72,15 @@ static int is_print_reg_error = 1;
 /* timers for ldisc to send callback on register complete */
 static unsigned long jiffi1, jiffi2;
 
+/* Required to buffer the packet type written to BT driver.
+ * Must be cleaned on close. */
+static uint8_t pkt_type;
+
+/* Partial read from userspace:
+ * Last read pos if only a fragment was read previously.
+ * Must be cleaned on close. */
+static size_t skb_read_offset;
+
 
 /*****************************************************************************
 **
@@ -281,6 +290,10 @@ static int brcm_bt_drv_close(struct inode *i, struct file *f)
     int err=0;
     struct brcm_bt_dev *bt_dev_p = f->private_data;
 
+    /* Reset buffers for read/write. */
+    pkt_type = NULL;
+    skb_read_offset = NULL;
+
 #ifndef TASKLET_SUPPORT
     cancel_work_sync(&bt_dev_p->tx_workqueue);
 #endif
@@ -336,8 +349,6 @@ static ssize_t brcm_bt_drv_read(struct file *f, char __user *buf, size_t
     struct brcm_bt_dev *bt_dev_p = f->private_data;
     size_t skb_size = 0;
     size_t skb_remaining_len = 0;
-     /* Last read pos if only a fragment was read previously.*/
-    static size_t skb_read_offset;
     unsigned long flags;
 
     spin_lock_irqsave(&bt_dev_p->rx_q_lock, flags);
@@ -406,7 +417,6 @@ static ssize_t brcm_bt_write(struct file *f, const char __user *buf,
     struct sk_buff *skb;
     struct brcm_bt_dev *bt_dev;
     unsigned long flags;
-    static uint8_t pkt_type;
     size_t pkt_len;
 
     bt_dev = f->private_data;

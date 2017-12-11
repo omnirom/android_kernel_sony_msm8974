@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f5285130_c55e3fe9",
+        "filename": "drivers/gpu/ion/ion.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1444,
+      "author": {
+        "id": 1001182
+      },
+      "writtenOn": "2017-12-11T16:31:19Z",
+      "side": 1,
+      "message": "remove",
+      "range": {
+        "startLine": 1444,
+        "startChar": 13,
+        "endLine": 1444,
+        "endChar": 18
+      },
+      "revId": "18d52c6331648193eeb9a460086b382238c91910",
+      "serverId": "56841c99-7c94-43d4-bf0b-cb4707e66d55",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab5b8170_d0533de0",
+        "filename": "drivers/gpu/ion/ion.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1445,
+      "author": {
+        "id": 1001182
+      },
+      "writtenOn": "2017-12-11T16:31:19Z",
+      "side": 1,
+      "message": "revert to handle",
+      "range": {
+        "startLine": 1445,
+        "startChar": 18,
+        "endLine": 1445,
+        "endChar": 28
+      },
+      "revId": "18d52c6331648193eeb9a460086b382238c91910",
+      "serverId": "56841c99-7c94-43d4-bf0b-cb4707e66d55",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50283dd4_b569a794",
+        "filename": "drivers/gpu/ion/ion.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1453,
+      "author": {
+        "id": 1001182
+      },
+      "writtenOn": "2017-12-11T16:31:19Z",
+      "side": 1,
+      "message": "to be removed",
+      "range": {
+        "startLine": 1445,
+        "startChar": 30,
+        "endLine": 1453,
+        "endChar": 2
+      },
+      "revId": "18d52c6331648193eeb9a460086b382238c91910",
+      "serverId": "56841c99-7c94-43d4-bf0b-cb4707e66d55",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "31d56def_43f7f9b2",
+        "filename": "drivers/gpu/ion/ion.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1461,
+      "author": {
+        "id": 1001182
+      },
+      "writtenOn": "2017-12-11T16:31:19Z",
+      "side": 1,
+      "message": "ION_IOC_ALLOC_COMPAT\nerror: \u0027ION_IOC_ALLOC_COMPAT\u0027 undeclared (first use in this function)\nalthough this is removed in a later commit, I believe the rest of this commit is probably good, just this declaration should be dropped here. I couldn\u0027t find the original commit this is taken from so can\u0027t tell if it is a mismerge",
+      "range": {
+        "startLine": 1454,
+        "startChar": 0,
+        "endLine": 1461,
+        "endChar": 34
+      },
+      "revId": "18d52c6331648193eeb9a460086b382238c91910",
+      "serverId": "56841c99-7c94-43d4-bf0b-cb4707e66d55",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "597ae2d4_2aca3e16",
+        "filename": "drivers/gpu/ion/ion.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1492,
+      "author": {
+        "id": 1001182
+      },
+      "writtenOn": "2017-12-11T16:31:19Z",
+      "side": 1,
+      "message": "and this",
+      "range": {
+        "startLine": 1489,
+        "startChar": 0,
+        "endLine": 1492,
+        "endChar": 37
+      },
+      "revId": "18d52c6331648193eeb9a460086b382238c91910",
+      "serverId": "56841c99-7c94-43d4-bf0b-cb4707e66d55",
+      "unresolved": false
+    }
+  ]
+}

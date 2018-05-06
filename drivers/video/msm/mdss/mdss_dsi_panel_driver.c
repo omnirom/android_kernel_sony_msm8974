@@ -120,7 +120,7 @@ static int __init continous_splash_setup(char *str)
 	if (!str)
 		return 0;
 	if (!strncmp(str, "on", 2))
-		display_on_in_boot = true;
+		display_on_in_boot = 0;
 	return 0;
 }
 __setup("display_status=", continous_splash_setup);
@@ -1103,7 +1103,6 @@ static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
 		pr_debug("%s: init (exit sleep) sequence\n", __func__);
 		mdss_dsi_panel_cmds_send(ctrl_pdata, &spec_pdata->init_cmds);
 	}
-
 	if (ctrl_pdata->on_cmds.cmd_cnt && !spec_pdata->disp_on_in_hs) {
 		mdss_dsi_panel_wait_change(ctrl_pdata, true);
 		pr_debug("%s: panel on sequence (in low speed)\n", __func__);
@@ -2213,8 +2212,7 @@ static int mdss_dsi_parse_panel_features(struct device_node *np,
 
 	pinfo = &ctrl->panel_data.panel_info;
 
-	pinfo->cont_splash_enabled = of_property_read_bool(np,
-		"qcom,cont-splash-enabled");
+	pinfo->cont_splash_enabled = 0;
 
 	pinfo->partial_update_enabled = of_property_read_bool(np,
 		"qcom,partial-update-enabled");

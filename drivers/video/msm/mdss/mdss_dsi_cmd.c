@@ -507,9 +507,13 @@ static int mdss_dsi_blank_pkt(struct dsi_buf *dp, struct dsi_cmd_desc *cm)
 int mdss_dsi_cmd_dma_add(struct dsi_buf *dp, struct dsi_cmd_desc *cm)
 {
 	struct dsi_ctrl_hdr *dchdr;
-	int len = 0;
+	int i, len = 0;
 
 	dchdr = &cm->dchdr;
+
+	printk("dtype: 0x%x", dchdr->dtype);
+	for (i = 0; i < cm->dchdr.dlen; i++)
+		printk("0x%x, ", cm->payload[i]);
 
 	switch (dchdr->dtype) {
 	case DTYPE_GEN_WRITE:
